@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: app
+  annotations:
+    cert-manager.io/cluster-issuer: http01-issuer
+    kubernetes.io/ingress.class: "ingress-nginx"
+    nginx.ingress.kubernetes.io/custom-http-errors: "403,404"
+    nginx.ingress.kubernetes.io/proxy-body-size: 256m
+    nginx.ingress.kubernetes.io/proxy-next-upstream: "off"
+    nginx.org/client-max-body-size: "0"
+spec:
+  ingressClassName: ingress-nginx
+  rules:
+    - host: {{ .Values.hostname }}
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: app
+                port:
+                  number: 80
+  tls:
+    - hosts:
+      - {{ .Values.hostname }}
+      secretName: {{ .Values.tls.secret }}

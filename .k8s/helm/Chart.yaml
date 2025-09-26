@@ -1,0 +1,4 @@
+apiVersion: v2
+name: mijnkantoor-import-mapper
+description: MijnKantoor Import Mapper
+version: 1.0.0

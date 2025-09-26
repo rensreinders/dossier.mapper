@@ -1,0 +1,50 @@
+services:
+  app:
+    platform: linux/arm64
+    pull_policy: never
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+    volumes:
+      - .:/app:Z
+    networks: [ import-mapper ]
+    depends_on: [ mysql ]
+    ports:
+      - "28080:8080"
+
+  mysql:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: import_mapper
+      MYSQL_USER: root
+      MYSQL_PASSWORD: secret
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    volumes:
+      - mysql:/var/lib/mysql:Z
+    networks: [import-mapper]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-psecret"]
+      retries: 3
+      timeout: 5s
+
+  adminer:
+    image: adminer
+    ports:
+      - "28081:8080"
+    environment:
+      ADMINER_DEFAULT_DB_DRIVER: mysql
+      ADMINER_DEFAULT_SERVER: mysql
+      ADMINER_DESIGN: nette
+      ADMINER_PLUGINS: tables-filter tinymce
+    networks: [import-mapper]
+
+networks:
+  import-mapper:
+    driver: bridge
+
+volumes:
+  mysql: {}
+  redis: {}
+  minio: {}
+  mailhog: {}
