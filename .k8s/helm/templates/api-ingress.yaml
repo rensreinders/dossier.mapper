@@ -12,6 +12,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-body-size: 256m
     nginx.ingress.kubernetes.io/proxy-next-upstream: "off"
     nginx.org/client-max-body-size: "0"
+    nginx.ingress.kubernetes.io/whitelist-source-range: "91.208.60.12/32"
 spec:
   ingressClassName: ingress-nginx
   rules:

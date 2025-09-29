@@ -9,11 +9,12 @@
     {{-- Optionele extra meta van child views --}}
     @yield('meta')
 
-    {{-- Bootstrap CSS (alleen CSS, via CDN) --}}
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    />
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Choices.js CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+
 
 </head>
 <body class="bg-light">
@@ -30,6 +31,7 @@
 <main class="container-fluid">
     @yield('content')
 </main>
+
 
 </body>
 </html>

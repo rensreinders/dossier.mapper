@@ -12,12 +12,11 @@
             <a href="{{ route('mapping.import') }}">Nieuwe CSV importeren</a>
             |
             <a href="{{ route('mapping.download') }}"
-                onclick="this.innerHTML='Bezig met downloaden...';
+               onclick="this.innerHTML='Bezig met downloaden...';
                 "
             >Backup downloaden</a>
         </div>
     </div>
-
 
 
     {{-- Flash messages --}}
@@ -31,7 +30,7 @@
     <form method="get" action="{{ route('mapping.index') }}" class="row">
         <div class="col-md-4">
             <label class="form-label">Zoek in <code>bron pad</code></label>
-            <input type="text" name="source_path" value="{{ $sourcePath }}" class="form-control"
+            <input type="text" name="source_path" id="source_path" value="{{ $sourcePath }}" class="form-control"
                    placeholder="bijvoorbeeld: /Samenstel/*/IB"
                    onkeyup="document.getElementById('mapping_source_path').value = this.value;"
             >
@@ -66,7 +65,7 @@
     </form>
     <br>
 
-    @if($sourcePath)
+
         {{-- Bulk update form --}}
         <form method="post" action="{{ route('mapping.update') }}" id="bulk-form">
             @csrf
@@ -76,16 +75,26 @@
 
             <div class="row">
                 <div class="col-md-10">
-                    <label class="form-label">{{$total}} bronpaden gevonden. Wat moet het doelpad worden. Zet doelpad op "-" om te negeren.</label>
-                    <input type="text" name="dest_path" id="dest_path" class="form-control" placeholder="" required
-                           onkeydown="if(event.key === 'Enter'){event.preventDefault(); return false;}">
+                    <label class="form-label">{{$total}} bronpaden gevonden. Wat moet het doelpad worden?</label>
+
+                    <select
+                        name="dest_dir_id"
+                        id="dest_dir_id"
+                        data-live-search="true"
+                        class="form-select">
+                        <option value="">--selecteer een doel pad--</option>
+                        <option value="-">Negeren, niet importeren</option>
+                        @foreach($destinationsDirs as $dir)
+                            <option value="{{ $dir->id }}">{{ $dir->path }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
-                <div class="col-md-2" style="padding-top: 32px">
+                <div class="col-md-2" style="padding-top: 30px">
                     <button class="btn btn-success w-100" type="button"
                             onclick="
-                                if(document.getElementById('dest_path').value.trim() === '') {
-                                    if(confirm('Het doel pad is leeg. Weet je zeker dat je dit wilt bijwerken?')) {
+                               if (document.getElementById('dest_dir_id').value.trim() === '') {
+                                    if (confirm('Het doel pad is leeg. Weet je zeker dat je dit wilt bijwerken?')) {
                                         document.getElementById('bulk-form').submit();
                                     } else {
                                         return;
@@ -99,7 +108,6 @@
                 </div>
             </div>
             <br>
-            @endif
 
 
             <div>
@@ -141,5 +149,22 @@
 
         </form>
 
+    <!-- Bootstrap + Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Choices.js -->
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const element = document.getElementById('dest_dir_id');
+            const choices = new Choices(element, {
+                searchEnabled: true,
+                itemSelectText: '',    // geen extra tekst bij hover
+                shouldSort: false,     // behoud Laravel volgorde
+                allowHTML: true
+            });
+        });
+    </script>
 
         @endsection

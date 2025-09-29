@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\DestDir;
 use App\Models\Document;
 use Illuminate\Http\Request;
 
@@ -11,13 +12,19 @@ class MappingController extends Controller
 
         $documents = $documents->paginate(1000);
 
+        $totalCount = Document::count();
+
+        $percentage = $totalCount ? round(100 - Document::whereNull('destination_path')->count() / $totalCount * 100, 2)
+            : 0;
+
         return view('mapping.index', [
             'sourcePath' => $request->source_path ?? '',
             'destinationPath' => $request->destination_path ?? '',
             'status' => $request->status ?? 'unmapped',
-            'percentageMapped' => round(100 - Document::whereNull('destination_path')->count() / Document::count() * 100, 2),
+            'percentageMapped' => $percentage,
             'total' => $documents->total(),
-            'rows' => $documents
+            'rows' => $documents,
+            'destinationsDirs' => DestDir::orderBy('path')->get(),
         ]);
     }
 
@@ -60,12 +67,18 @@ class MappingController extends Controller
     {
         $documents = $this->buildQuery($request->source_path, $request->status);
 
+        if ($request->dest_dir_id != "-") {
+            $destDir = $request->dest_dir_id != '' ?
+                DestDir::where('id', $request->dest_dir_id)->first()->path
+                : null;
+        } else {
+            $destDir = "-";
+        }
 
-        $documents->update(['destination_path' => $request->dest_path ? $request->dest_path : null]);
-
+        $documents->update(['destination_path' => $destDir]);
 
         return redirect()->route('mapping.index', [
-            'source_path' => $request->source_path ?? '',
+            'source_path' => '',
             'status' => 'unmapped',
         ]);
     }

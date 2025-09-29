@@ -15,7 +15,7 @@ RUN useradd -u 10001 -m appuser
 USER appuser
 
 WORKDIR /app
-COPY --chown=appuser:appuser app /app
+COPY --chown=appuser:appuser . /app
 EXPOSE 8080
 
 # Built-in webserver voor demo/doel: 1 endpoint
