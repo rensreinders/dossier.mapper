@@ -15,6 +15,8 @@
                onclick="this.innerHTML='Bezig met downloaden...';
                 "
             >Backup downloaden</a>
+            |
+            <a href="{{ route('logout') }}">Uitloggen</a>
         </div>
     </div>
 
