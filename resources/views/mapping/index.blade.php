@@ -164,7 +164,8 @@
                 searchEnabled: true,
                 itemSelectText: '',    // geen extra tekst bij hover
                 shouldSort: false,     // behoud Laravel volgorde
-                allowHTML: true
+                allowHTML: true,
+                searchResultLimit: 100,
             });
         });
     </script>
