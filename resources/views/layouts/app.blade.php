@@ -9,8 +9,6 @@
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Choices.js CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
 
 </head>
 <body class="bg-light">
@@ -28,24 +26,6 @@
     @yield('content')
 </main>
 
-
-<!-- Bootstrap + Dependencies -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Choices.js -->
-<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const element = document.getElementById('dest_dir_id');
-        const choices = new Choices(element, {
-            searchEnabled: true,
-            itemSelectText: '',    // geen extra tekst bij hover
-            shouldSort: false,     // behoud Laravel volgorde
-            allowHTML: true
-        });
-    });
-</script>
 
 
 </body>

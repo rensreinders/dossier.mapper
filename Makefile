@@ -1,7 +1,7 @@
 # =========================
 # Config
 # =========================
-VERSION    ?= 0.1.0
+VERSION    ?= 0.1.1
 ENGINE     ?= podman
 DOCKERFILE ?= .docker/Dockerfile
 CHART_DIR  ?= .k8s/helm
