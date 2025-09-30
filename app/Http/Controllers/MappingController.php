@@ -8,7 +8,7 @@ class MappingController extends Controller
 {
     public function index(Request $request)
     {
-        $documents = $this->buildQuery($request->source_path, $request->status);
+        $documents = $this->buildQuery($request->source_path, $request->destination_path, $request->status);
 
         $documents = $documents->paginate(1000);
 
@@ -65,7 +65,7 @@ class MappingController extends Controller
 
     public function update(Request $request)
     {
-        $documents = $this->buildQuery($request->source_path, $request->status);
+        $documents = $this->buildQuery($request->source_path, $request->destination_path, $request->status);
 
         if ($request->dest_dir_id != "-") {
             $destDir = $request->dest_dir_id != '' ?
@@ -83,19 +83,26 @@ class MappingController extends Controller
         ]);
     }
 
-    protected function buildQuery($sourcePath, $status)
+    protected function buildQuery($sourcePath, $destPath, $status)
     {
         $documents = Document::query();
 
         $sourcePath = str_replace("*", "%", $sourcePath ?? '');
+        $destPath = str_replace("*", "%", $destPath ?? '');
 
         // only allow 3 wildcard characters
         if (substr_count($sourcePath, '%') > 3) {
             abort(400, 'Too many wildcard characters');
         }
 
+        if (substr_count($destPath, '%') > 3) {
+            abort(400, 'Too many wildcard characters');
+        }
+
 
         $sourcePath && $documents->where('source_path', 'like', '%' . $sourcePath . '%');
+
+        $destPath && $documents->where('destination_path', 'like', '%' . $destPath . '%');
 
         switch ($status) {
             case 'mapped':
